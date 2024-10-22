@@ -1,3 +1,10 @@
+const readline = require('readline');
+
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+  });
+  
 //lista de tareas
 
 class AppTareas{
@@ -14,44 +21,61 @@ class AppTareas{
     console.log("4. tarea pendiente");
     }
         
+    obtenerEntrada(pregunta) {
+        return new Promise(resolve => {
+          rl.question(pregunta, respuesta => {
+            resolve(respuesta);
+          });
+        });
+      }
+
+      async verTareas() {
+        if (this.tareas.length === 0) {
+          console.log("No hay tareas");
+        } else {
+          console.log("\n--- Tareas ---");
+          this.tareas.forEach((tarea, indice) => {
+            console.log(`${indice + 1}. ${tarea}`);
+          });
+        }
+      }
+
    //añadir tarea
-    añadirTarea(){
-    const tarea = prompt("escribe una tarea: ");
+    async añadirTarea(){
+    const tarea = await this.obtenerEntrada("escribe una tarea: ");
     tareas.push(tarea);
     console.log(`tarea agregada: ${tarea}`);
     }
 
    //eliminar tarea
-    eliminarTarea(){
-    tareas.forEach((tarea,indice)=>{
-      console.log(`${indice+1}:${tarea}`)
-    });
-    const indice = parseInt(prompt("ingrese el numero de la tarea a eliminar:"))-1
+   async eliminarTarea(){
+    await this.verTareas();
+    const indice = parseInt(await this.obtenerEntrada("ingrese el numero de la tarea a eliminar:"))-1
     if(indice >=0 && indice<tareas.lenght){
         const tareaEliminada = tareas.splice(indice, 1)[0];
+        console.log(`tarea eliminada: ${tareaEliminada}`)
     }else{
         console.log("Número de tarea inválido");
     }
     }
 
     //marcar tarea como completada
-//function tareaCompletada(){
+// tareaCompletada(){
 //}
 
 // Función principal
- 
 
 
-ejecutar() {
-    while (true) {
-      mostrarMenu();
-      const opcion = parseInt(prompt("Ingrese una opción: "));
+   async ejecutar() {
+      while (true) {
+        this.mostrarOpciones();
+      const opcion = parseInt(await this.obtenerEntrada("Ingrese una opción: "));
       switch (opcion) {
         case 1:
-          agregarTarea();
+          this.añadirTarea();
           break;
         case 2:
-          eliminarTarea();
+          this.eliminarTarea();
           break;
         default:
             console.log("opcion invalida");
@@ -61,7 +85,11 @@ ejecutar() {
 
 }
 
+// Crear una instancia de la clase ToDoList
+const listaDeTareas = new AppTareas();
 
+// Ejecutar la aplicación
+listaDeTareas.ejecutar();
 
 
 
