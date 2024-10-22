@@ -16,4 +16,17 @@ function añadirTarea(){
     tareas.push(tarea);
     console.log(`tarea agregada: ${tarea}`);
 }
+//eliminar tarea
+function eliminarTarea(){
+    tareas.forEach((tarea,indice)=>{
+      console.log(`${indice+1}:${tarea}`)
+    });
+    const indice = parseInt(prompt("ingrese el numero de la tarea a eliminar:"))-1
+    if(indice >=0 && indice<tareas.lenght){
+        const tareaEliminada = tareas.splice(indice, 1)[0];
+    }else{
+        console.log("Número de tarea inválido");
+    }
+}
 
+//
