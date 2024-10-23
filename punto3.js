@@ -11,6 +11,8 @@ class AppTareas{
 
     constructor(){
       this.tareas = [];
+      this.pendentTareas = [];
+      this.completeTareas = [];
     }
 
     mostrarOpciones(){
@@ -43,40 +45,82 @@ class AppTareas{
    //añadir tarea
     async añadirTarea(){
     const tarea = await this.obtenerEntrada("escribe una tarea: ");
-    tareas.push(tarea);
+    this.tareas.push(tarea);
     console.log(`tarea agregada: ${tarea}`);
     }
 
    //eliminar tarea
    async eliminarTarea(){
     await this.verTareas();
-    const indice = parseInt(await this.obtenerEntrada("ingrese el numero de la tarea a eliminar:"))-1
-    if(indice >=0 && indice<tareas.lenght){
-        const tareaEliminada = tareas.splice(indice, 1)[0];
-        console.log(`tarea eliminada: ${tareaEliminada}`)
+    const indice = await this.obtenerEntrada("ingrese el numero de la tarea a eliminar:")
+    let index = parseInt(indice)-1;
+    if(index >=0 && index<=this.tareas.length){
+      
+        const tareaEliminada = this.tareas.filter((num,i)=> i !== index);
+        console.log("dasd",tareaEliminada)
+        console.log(`tarea eliminada: ${this.tareas[index]}`);
+        this.tareas = [...tareaEliminada];
+        
     }else{
         console.log("Número de tarea inválido");
+    }}
+
+  //marcar tarea como completada
+  
+ async tareaCompletada(){
+  await this.verTareas();
+  const tareaMarcada = await this.obtenerEntrada("ingrese el numero de tarea completada:")
+  let tareaNumber = parseInt(tareaMarcada)-1;
+  if(tareaNumber>=0 && tareaNumber<= this.tareas.length){
+      const tareaObject = {tarea:this.tareas[tareaNumber], completada:"completed"}
+       this.completeTareas.push(tareaObject)
+       console.log("tareas completada: ",this.completeTareas)
+  }else{
+    console.log()
+  }
+  }
+//tareas pendiente
+      tareasPendientes(){
+        if (!this.completeTareas || !this.tareas) {
+          console.error("no hay tareas pendientes.");
+          return;
+        }
+        const tareasCompletadasSet = new Set(this.completeTareas.map(tarea => tarea.tarea));
+        this.pendentTareas = this.tareas.filter(task => !tareasCompletadasSet.has(task));
+        console.log("Tareas pendientes", this.pendentTareas);
     }
+    guardar(){
+
     }
 
-    //marcar tarea como completada
-// tareaCompletada(){
-//}
+// Esto cierra el proceso Node.js
+    salir(){
+      console.log("Saliendo de la aplicación...");
+      process.exit(0); 
+    }
 
 // Función principal
-
 
    async ejecutar() {
       while (true) {
         this.mostrarOpciones();
       const opcion = parseInt(await this.obtenerEntrada("Ingrese una opción: "));
-      switch (opcion) {
+      switch (parseInt(opcion)) {
         case 1:
-          this.añadirTarea();
+         await this.añadirTarea();
           break;
         case 2:
-          this.eliminarTarea();
+         await this.eliminarTarea();
           break;
+        case 3:
+         await this.tareaCompletada();
+          break;
+        case 4:
+          await this.tareasPendientes();
+          break;
+          case 5:
+           this.salir();
+            break;
         default:
             console.log("opcion invalida");
         }
