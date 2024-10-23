@@ -6,6 +6,7 @@ const rl = readline.createInterface({
     output: process.stdout
   });
   
+  
 //lista de tareas
 
 class AppTareas{
@@ -41,6 +42,7 @@ class AppTareas{
           console.log("\n--- Tareas ---");
           this.tareas.forEach((tarea, indice) => {
             console.log(`${indice + 1}. ${tarea}`);
+            return this.tareas;
           });
         }
       }
@@ -98,7 +100,8 @@ class AppTareas{
         if (err) {
           console.error('Error al guardar tareas:', err);
         } else {
-          console.log('Tareas guardadas con éxito.');
+          console.log('\n Tareas guardadas con éxito.');
+          this.salir();
         }
       });
     }
@@ -147,8 +150,5 @@ const listaDeTareas = new AppTareas();
 
 // Ejecutar la aplicación
 listaDeTareas.ejecutar();
-
-
-
 
 
