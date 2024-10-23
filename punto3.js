@@ -1,4 +1,5 @@
 const readline = require('readline');
+const fs = require('fs');
 
 const rl = readline.createInterface({
     input: process.stdin,
@@ -21,6 +22,8 @@ class AppTareas{
     console.log("2. Eliminar tarea");
     console.log("3. tarea completada");
     console.log("4. tarea pendiente");
+    console.log("5. guardar tareas");
+    console.log("6. salir");
     }
         
     obtenerEntrada(pregunta) {
@@ -89,8 +92,15 @@ class AppTareas{
         this.pendentTareas = this.tareas.filter(task => !tareasCompletadasSet.has(task));
         console.log("Tareas pendientes", this.pendentTareas);
     }
-    guardar(){
-
+   async guardar(){
+      const texto = this.tareas.join('\n');
+      fs.writeFile('tareas.txt', texto, (err) => {
+        if (err) {
+          console.error('Error al guardar tareas:', err);
+        } else {
+          console.log('Tareas guardadas con éxito.');
+        }
+      });
     }
 
 // Esto cierra el proceso Node.js
@@ -116,9 +126,12 @@ class AppTareas{
          await this.tareaCompletada();
           break;
         case 4:
-          await this.tareasPendientes();
+          this.tareasPendientes();
           break;
-          case 5:
+        case 5:
+           await this.guardar();
+             break;
+        case 6:
            this.salir();
             break;
         default:
